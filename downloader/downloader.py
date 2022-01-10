@@ -129,6 +129,6 @@ class Downloader:
                 progress.update(value)
                 self.progress_callback(value / progress.total)
                 
-            stream_raw = CallbackIOWrapper(callback, stream.raw)                
+            stream_raw = CallbackIOWrapper(callback, stream.raw)
             with open(self.temp_dest, "ab") as fp:
                 shutil.copyfileobj(stream_raw, fp, length=chunk_size)
