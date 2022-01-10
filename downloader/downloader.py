@@ -6,6 +6,7 @@ import urllib.parse
 
 from plib import Path
 from tqdm import tqdm
+from tqdm.utils import CallbackIOWrapper
 
 
 def get(*urls, **kwargs):
@@ -38,7 +39,7 @@ def download(url, dest=None, **kwargs):
 
 
 class Downloader:
-    def __init__(self, url, dest=None, session=None, headers=None, retries=4, timeout=10):
+    def __init__(self, url, dest=None, session=None, headers=None, progress_callback=None, retries=4, timeout=10):
         self.url = url
         self.dest = self.dest_location(dest)
         
@@ -60,7 +61,8 @@ class Downloader:
         
         self.retries = retries
         self.retry = 0
-        self.timeout = timeout        
+        self.timeout = timeout
+        self.progress_callback = progress_callback or (lambda p: None)
         
     def dest_location(self, dest):
         if dest is None or Path(dest).is_dir():
@@ -121,7 +123,12 @@ class Downloader:
         desc = f"Downloading {self.dest.name}"
         if self.retry > 0:
             desc += f" (retry {self.retry}/{self.retries}"
+                        
+        with tqdm(total=total, desc=desc, unit="B", unit_scale=True, unit_divisor=1024) as progress:
+            def callback(value):
+                progress.update(value)
+                self.progress_callback(value / progress.total)
                 
-        with tqdm.wrapattr(stream.raw, "read", total=total, desc=desc) as stream_raw:
+            stream_raw = CallbackIOWrapper(callback, stream.raw)                
             with open(self.temp_dest, "ab") as fp:
                 shutil.copyfileobj(stream_raw, fp, length=chunk_size)

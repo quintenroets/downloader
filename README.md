@@ -7,6 +7,7 @@ Features:
 * Continue from partial download after error
 * Show progressbar during download
 * Download multiple urls in separate threads
+* Specify custom callback on progress update
 
 Options to specify:
 * Destination location
