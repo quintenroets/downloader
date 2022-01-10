@@ -111,7 +111,7 @@ class Downloader:
             start = 0
         elif 'Content-Range' in stream.headers:
             start = int(stream.headers["Content-Range"].split("bytes ")[1].split("-")[0])
-        elif 200 <= stream.status_code <= 299:
+        elif stream.ok:
             start = 0
         else:
             raise requests.exceptions.RequestException
