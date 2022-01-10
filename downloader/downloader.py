@@ -41,7 +41,9 @@ def download(url, dest=None, **kwargs):
 
 
 class Downloader:
-    def __init__(self, url, dest=None, folder=None, session=None, headers=None, progress_callback=None, retries=4, timeout=10):
+    def __init__(self, url, dest=None, folder=None, session=None, headers=None, progress_callback=None, retries=4, timeout=10,
+                 overwrite_identical_size=True
+                 ):
         self.url = url
         dest = dest or Downloader.url_name(url) or "download"
         if folder:
@@ -68,6 +70,7 @@ class Downloader:
         self.retry = 0
         self.timeout = timeout
         self.progress_callback = progress_callback or (lambda p: None)
+        self.overwrite_identical_size = overwrite_identical_size
         
     @staticmethod
     def url_name(url):
@@ -114,14 +117,17 @@ class Downloader:
             raise requests.exceptions.RequestException
         
         if not self.not_modified:
+            self.not_modified = not self.overwrite_identical_size and self.dest.size == int(stream.headers["Content-Length"])
+        
+        if not self.not_modified:
             self.start_download(start, stream)
             
     def start_download(self, start, stream):
         if self.temp_dest.size > start:
-            start = 0
             self.temp_dest.unlink()
+            start = 0
         
-        total = int(stream.headers["Content-Length"])  # length that still needs to be received
+        total = int(stream.headers["Content-Length"])  # length that still needs to be received        
         chunk_size = min(total // 10, 128 * 1024)  # max 128 KB
         chunk_size = max(chunk_size, 1)  # min 1 KB
         desc = f"Downloading {self.dest.name}"

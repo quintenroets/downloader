@@ -3,6 +3,7 @@
 Download urls in a script as if you would download them from your browser
 
 Features:
+* Only downloads the destination does not exist or the server indicates that there is a newer version
 * Automatically retry after error
 * Continue from partial download after error
 * Show progressbar during download
@@ -13,6 +14,7 @@ Options to specify:
 * Destination location
 * Number of retries
 * Headers, session or cookies for download request
+* Whether to overwrite the download if the newly downloaded file has the same size
 
 Script to visualize the current pandemic situation in Belgium.
 
