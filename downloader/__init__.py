@@ -1,4 +1,5 @@
 from plib import Path
+import threading
 
 from .downloader import Downloader
 
