@@ -14,7 +14,9 @@ def get(*urls, **kwargs):
     Get the content of urls and cache it to a local file.
     Useful to speed up the process when the same url is requested multiple times
     """
-    dests = download_urls(urls, dest=Path.HOME / ".cache" / "downloader", **kwargs)
+    folder = Path.HOME / ".cache" / "downloader"
+    urls = {u: folder / "_".join(u.split("/")) for u in urls}
+    dests = download_urls(urls, **kwargs)
     return [d.byte_content for d in dests]
 
 
@@ -39,9 +41,12 @@ def download(url, dest=None, **kwargs):
 
 
 class Downloader:
-    def __init__(self, url, dest=None, session=None, headers=None, progress_callback=None, retries=4, timeout=10):
+    def __init__(self, url, dest=None, folder=None, session=None, headers=None, progress_callback=None, retries=4, timeout=10):
         self.url = url
-        self.dest = self.dest_location(dest)
+        dest = dest or Downloader.url_name(url) or "download"
+        if folder:
+            dest = Path(folder) / dest
+        self.dest = Path(dest)
         
         self.session = session or requests.Session()
         self.session.stream = True
@@ -64,14 +69,11 @@ class Downloader:
         self.timeout = timeout
         self.progress_callback = progress_callback or (lambda p: None)
         
-    def dest_location(self, dest):
-        if dest is None or Path(dest).is_dir():
-            url_path = urllib.parse.urlparse(self.url).path
-            name = urllib.parse.unquote(url_path).split("/")[-1]
-            dest = Path(name) if dest is None else Path(dest) / name
-        else:
-            dest = Path(dest)
-        return dest
+    @staticmethod
+    def url_name(url):
+        url_path = urllib.parse.urlparse(url).path
+        name = urllib.parse.unquote(url_path).split("/")[-1]
+        return name
         
     @property
     def temp_dest(self):
@@ -106,6 +108,8 @@ class Downloader:
             start = 0
         elif 'Content-Range' in stream.headers:
             start = int(stream.headers["Content-Range"].split("bytes ")[1].split("-")[0])
+        elif 200 <= stream.status_code <= 299:
+            start = 0
         else:
             raise requests.exceptions.RequestException
         
@@ -130,5 +134,5 @@ class Downloader:
                 self.progress_callback(value / progress.total)
                 
             stream_raw = CallbackIOWrapper(callback, stream.raw)
-            with open(self.temp_dest, "ab") as fp:
+            with self.temp_dest.open("ab") as fp:
                 shutil.copyfileobj(stream_raw, fp, length=chunk_size)
