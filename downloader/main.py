@@ -12,5 +12,5 @@ def main():
     downloader.download(args.url, args.dest)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

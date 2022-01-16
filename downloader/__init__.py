@@ -5,12 +5,12 @@ from .downloader import Downloader
 
 
 def get(*urls, **kwargs):
-    """
+    '''
     Get the content of urls and cache it to a local file.
     Useful to speed up the process when the same url is requested multiple times
-    """
-    folder = Path.HOME / ".cache" / "downloader"
-    urls = {u: folder / "_".join(u.split("/")) for u in urls}
+    '''
+    folder = Path.HOME / '.cache' / 'downloader'
+    urls = {u: folder / '_'.join(u.split('/')) for u in urls}
     dests = download_urls(urls, **kwargs)
     return [d.byte_content for d in dests]
 
