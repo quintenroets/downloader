@@ -1,4 +1,5 @@
 import requests
+import rich.progress as progress
 import shutil
 import time
 import urllib3
@@ -6,7 +7,6 @@ import urllib.parse
 
 from plib import Path
 from retry import retry
-from tqdm import tqdm
 from tqdm.utils import CallbackIOWrapper
 
 TRIES = 5
@@ -79,16 +79,29 @@ class Downloader:
             
     def start_download(self, stream):
         total = int(stream.headers['Content-Length'])  # length that still needs to be received
-        progress = tqdm(total=total, desc=self.description, unit='B', unit_scale=True, unit_divisor=1024)
+        
+        prog = progress.Progress(
+            progress.TextColumn("[bold blue]{task.fields[desc]}", justify="right"),
+            progress.BarColumn(bar_width=None),
+            "[progress.percentage]{task.percentage:>3.1f}%",
+            "•",
+            progress.DownloadColumn(),
+            "•",
+            progress.TransferSpeedColumn(),
+            "•",
+            progress.TimeRemainingColumn(),
+        )
+        
+        job = prog.add_task(self.description, total=total, desc=self.description)
         
         def progres_callback(value):
-            progress.update(value)
+            prog.advance(job, value)
             self.progress_callback(value / total)
         
         stream_raw = CallbackIOWrapper(progres_callback, stream.raw)
         
         chunk_size = self.truncate(total // 10, 1 * 1024, 128 * 1024)
-        with progress, self.temp_dest.open('ab') as fp:
+        with prog, self.temp_dest.open('ab') as fp:
             shutil.copyfileobj(stream_raw, fp, length=chunk_size)
         
         self.temp_dest.rename(self.dest)
