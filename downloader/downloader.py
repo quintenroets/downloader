@@ -9,6 +9,8 @@ from plib import Path
 from retry import retry
 from tqdm.utils import CallbackIOWrapper
 
+from .progress import UIProgress
+
 TRIES = 5
 
 
@@ -58,6 +60,8 @@ class Downloader:
     def download(self):
         self.retry += 1
         headers = {'Range': f'bytes={self.temp_dest.size}-'}
+        if 'If-Modified-Since' in self.session.headers:
+            self.session.headers.pop('If-Modified-Since')
         stream = self.session.get(self.url, timeout=self.timeout, stream=True, headers=headers)
         if stream.status_code != 304:
             self.download_modified(stream)
@@ -78,30 +82,20 @@ class Downloader:
             self.start_download(stream)
             
     def start_download(self, stream):
-        total = int(stream.headers['Content-Length'])  # length that still needs to be received
-        
-        prog = progress.Progress(
-            progress.TextColumn("[bold blue]{task.fields[desc]}", justify="right"),
-            progress.BarColumn(bar_width=None),
-            "[progress.percentage]{task.percentage:>3.1f}%",
-            "•",
-            progress.DownloadColumn(),
-            "•",
-            progress.TransferSpeedColumn(),
-            "•",
-            progress.TimeRemainingColumn(),
-        )
-        
-        job = prog.add_task(self.description, total=total, desc=self.description)
+        if 'Content-Length' in stream.headers:
+            total = int(stream.headers['Content-Length'])  # length that still needs to be received
+        else:
+            total = int(stream.headers['Content-Range'].split('/')[-1])
+        progress = UIProgress(self.description, total=total)
         
         def progres_callback(value):
-            prog.advance(job, value)
+            progress.advance(value)            
             self.progress_callback(value / total)
         
         stream_raw = CallbackIOWrapper(progres_callback, stream.raw)
         
         chunk_size = self.truncate(total // 10, 1 * 1024, 128 * 1024)
-        with prog, self.temp_dest.open('ab') as fp:
+        with progress, self.temp_dest.open('ab') as fp:
             shutil.copyfileobj(stream_raw, fp, length=chunk_size)
         
         self.temp_dest.rename(self.dest)
@@ -112,9 +106,7 @@ class Downloader:
         
     @property
     def description(self):
-        desc = f'Downloading {self.dest.name}'
-        if self.retry > 0:
-            desc += f' (retry {self.retry}/{TRIES - 1}'
+        desc = f'[retry {self.retry}/{TRIES - 1}] {self.dest.name}' if self.retry > 0 else self.dest.name
         return desc
     
     @staticmethod
