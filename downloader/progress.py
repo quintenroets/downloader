@@ -8,11 +8,11 @@ class SizedTextColumn(progress.ProgressColumn):
     def __init__(
         self,
         text_format: str,
-        style = "none",
-        justify = "left",
+        style="none",
+        justify="left",
         markup: bool = True,
-        highlighter = None,
-        overflow = None,
+        highlighter=None,
+        overflow=None,
         width: int = 40,
     ) -> None:
         self.text_format = text_format
@@ -36,8 +36,11 @@ class SizedTextColumn(progress.ProgressColumn):
         text.truncate(max_width=self.width, overflow=self.overflow, pad=True)
         return text
 
-progressmanager = progress.Progress(    
-    SizedTextColumn("[progress.description]{task.description}", width=40, overflow='ellipsis'),
+
+progressmanager = progress.Progress(
+    SizedTextColumn(
+        "[progress.description]{task.description}", width=40, overflow="ellipsis"
+    ),
     progress.BarColumn(),
     progress.DownloadColumn(),
     progress.TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
@@ -46,19 +49,19 @@ progressmanager = progress.Progress(
 
 
 class UIProgress:
-    def __init__(self, description, total=None):
+    def __init__(self, description, total):
         progressmanager.__enter__()
         self.job = progressmanager.add_task(description, total=total, desc=description)
 
     def advance(self, value):
         progressmanager.advance(self.job, value)
-        
+
     def update(self, **kwargs):
         progressmanager.update(self.job, **kwargs)
-        
+
     def __enter__(self):
         return self
-    
+
     def __exit__(self, *_):
         if all([t.finished for t in progressmanager.tasks]):
             progressmanager.__exit__(*_)
