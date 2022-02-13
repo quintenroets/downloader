@@ -122,12 +122,11 @@ class Downloader:
 
     @property
     def description(self):
-        desc = (
+        return (
             f"[retry {self.retry}/{TRIES - 1}] {self.dest.name}"
             if self.retry > 0
             else self.dest.name
         )
-        return desc
 
     @staticmethod
     def truncate(value, min_value, max_value):
