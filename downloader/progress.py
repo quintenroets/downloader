@@ -1,4 +1,8 @@
+from typing import Optional, Union
+
 import rich.progress as progress
+from rich.console import OverflowMethod
+from rich.progress import JustifyMethod
 from rich.text import Text
 
 
@@ -16,7 +20,7 @@ class SizedTextColumn(progress.ProgressColumn):
         width: int = 40,
     ) -> None:
         self.text_format = text_format
-        self.justify: JustifyMethod = justify
+        self.justify: Union[JustifyMethod, str] = justify
         self.style = style
         self.markup = markup
         self.highlighter = highlighter
