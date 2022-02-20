@@ -108,6 +108,8 @@ class Downloader:
             progress.advance(value)
             self.progress_callback(value / total)
 
+        progres_callback(self.dest.size)  # already downloaded part is progress
+
         stream_raw = CallbackIOWrapper(progres_callback, stream.raw)
 
         chunk_size = self.truncate(total // 10, 1 * 1024, 128 * 1024)
