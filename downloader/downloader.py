@@ -96,13 +96,16 @@ class Downloader:
             self.start_download(stream)
 
     def start_download(self, stream):
-        if "Content-Length" in stream.headers:
-            total = int(
+        total = (
+            int(
                 stream.headers["Content-Length"]
             )  # length that still needs to be received
-        else:
-            total = int(stream.headers["Content-Range"].split("/")[-1])
-        progress = UIProgress(self.description, total=total)
+            if "Content-Length" in stream.headers
+            else int(stream.headers["Content-Range"].split("/")[-2])
+        )
+
+        progress = UIProgress(self.description, total=total + self.dest.size)
+        # downloaded size added to todo and done
 
         def progres_callback(value):
             progress.advance(value)
