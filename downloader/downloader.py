@@ -96,12 +96,13 @@ class Downloader:
             self.start_download(stream)
 
     def start_download(self, stream):
+        pprint(stream.headers["Content-Range"])
         total = (
             int(
                 stream.headers["Content-Length"]
             )  # length that still needs to be received
             if "Content-Length" in stream.headers
-            else int(stream.headers["Content-Range"].split("/")[-2])
+            else int(stream.headers["Content-Range"].split("/")[-1])
         )
 
         progress = UIProgress(self.description, total=total + self.dest.size)
