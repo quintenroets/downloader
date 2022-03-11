@@ -96,7 +96,6 @@ class Downloader:
             self.start_download(stream)
 
     def start_download(self, stream):
-        pprint(stream.headers["Content-Range"])
         total = (
             int(
                 stream.headers["Content-Length"]
