@@ -5,10 +5,9 @@ import urllib.parse
 import requests
 import rich.progress as progress
 import urllib3
+from plib import Path
 from retry import retry
 from tqdm.utils import CallbackIOWrapper
-
-from plib import Path
 
 from .progress import UIProgress
 
