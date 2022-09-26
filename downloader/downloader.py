@@ -1,7 +1,10 @@
 import shutil
 import time
 import urllib.parse
+from dataclasses import dataclass
+from typing import Callable, Dict
 
+import dateutil
 import requests
 import rich.progress as progress
 import urllib3
@@ -14,26 +17,22 @@ from .progress import UIProgress
 TRIES = 5
 
 
+@dataclass
 class Downloader:
-    def __init__(
-        self,
-        url,
-        dest=None,
-        folder=None,
-        session=None,
-        headers=None,
-        progress_callback=None,
-        timeout=10,
-        skip_same_size=False,
-    ):
-        self.url = url
-        self.dest = self.prepare_dest(dest, folder)
-        self.session = self.prepare_session(session, headers)
+    url: str
+    dest: Path | str
+    folder: Path | str = None
+    session: requests.Session | None = None
+    headers: Dict | None = None
+    retry_amount: int = -1
+    timeout: int = 10
+    progress_callback: Callable = lambda p: None
+    skip_same_size: bool = False
+    set_time: bool = True  # set modified time to modified time on server
 
-        self.retry = -1
-        self.timeout = timeout
-        self.progress_callback = progress_callback or (lambda p: None)
-        self.skip_same_size = skip_same_size
+    def __post_init__(self):
+        self.dest = self.prepare_dest(self.dest, self.folder)
+        self.session = self.prepare_session(self.session, self.headers)
 
     def prepare_session(self, session, headers):
         session = session or requests.Session()
@@ -65,7 +64,7 @@ class Downloader:
         tries=TRIES,
     )
     def download(self):
-        self.retry += 1
+        self.retry_amount += 1
         headers = {"Range": f"bytes={self.temp_dest.size}-"}
         if "If-Modified-Since" in self.session.headers:
             self.session.headers.pop("If-Modified-Since")
@@ -119,6 +118,10 @@ class Downloader:
             shutil.copyfileobj(stream_raw, fp, length=chunk_size)
 
         self.temp_dest.rename(self.dest)
+        modified_key = "last-modified"
+        if self.set_time and modified_key in stream.headers:
+            server_mtime = stream.headers[modified_key]
+            self.dest.mtime = dateutil.parser.parse(server_mtime).timestamp()
 
     @property
     def temp_dest(self):
@@ -127,8 +130,8 @@ class Downloader:
     @property
     def description(self):
         return (
-            f"[retry {self.retry}/{TRIES - 1}] {self.dest.name}"
-            if self.retry > 0
+            f"[retry {self.retry_amount}/{TRIES - 1}] {self.dest.name}"
+            if self.retry_amount > 0
             else self.dest.name
         )
 
