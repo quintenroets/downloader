@@ -20,7 +20,7 @@ TRIES = 5
 @dataclass
 class Downloader:
     url: str
-    dest: Path | str
+    dest: Path | str | None = None
     folder: Path | str = None
     session: requests.Session | None = None
     headers: Dict | None = None
