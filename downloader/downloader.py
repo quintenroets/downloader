@@ -4,7 +4,7 @@ import urllib.parse
 from dataclasses import dataclass
 from typing import Callable, Dict
 
-import dateutil
+import dateutil.parser
 import requests
 import rich.progress as progress
 import urllib3
