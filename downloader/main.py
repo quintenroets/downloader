@@ -5,7 +5,7 @@ import downloader
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Download url to file with opention to retry on errors and resume from partial downloads"
+        description="Download url to file with option to retry on errors and resume from partial downloads"
     )
     parser.add_argument("url", help="The url to download")
     parser.add_argument(
