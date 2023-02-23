@@ -1,5 +1,0 @@
-requests
-retry
-tqdm
-
-superpathlib @ git+https://github.com/quintenroets/superpathlib
