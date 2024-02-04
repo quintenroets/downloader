@@ -5,15 +5,22 @@ from plib import Path
 from .downloader import Downloader
 
 
+def download(url: str, dest: Path | None = None, **kwargs):
+    downloader = Downloader(url, dest=dest, **kwargs)
+    downloader.download()
+    return downloader.dest
+
+
 def get(*urls, **kwargs):
-    """
-    Get the content of urls and cache it to a local file.
-    Useful to speed up the process when the same url is requested multiple times
+    """Get the content of urls and cache it to a local file.
+
+    Useful to speed up the process when the same url is requested
+    multiple times
     """
     folder = Path.HOME / ".cache" / "downloader"
     urls = {u: folder / "_".join(u.split("/")) for u in urls}
-    dests = download_urls(urls, **kwargs)
-    return [d.byte_content for d in dests]
+    dest_paths = download_urls(urls, **kwargs)
+    return [dest_path.byte_content for dest_path in dest_paths]
 
 
 def download_urls(urls, **kwargs):
@@ -28,9 +35,3 @@ def download_urls(urls, **kwargs):
     for t in threads:
         t.join()
     return [d.dest for d in downloaders]
-
-
-def download(url, dest=None, **kwargs):
-    d = Downloader(url, dest=dest, **kwargs)
-    d.download()
-    return d.dest

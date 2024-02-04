@@ -1,12 +1,11 @@
 import shutil
 import time
 import urllib.parse
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, Dict
 
 import dateutil.parser
 import requests
-import rich.progress as progress
 import urllib3
 from plib import Path
 from retry import retry
@@ -23,10 +22,10 @@ class Downloader:
     dest: Path | str | None = None
     folder: Path | str = None
     session: requests.Session | None = None
-    headers: Dict | None = None
+    headers: dict | None = None
     retry_amount: int = -1
     timeout: int = 10
-    progress_callback: Callable = lambda p: None
+    progress_callback: Callable | None = None
     skip_same_size: bool = False
     set_time: bool = True  # set modified time to modified time on server
 
@@ -107,7 +106,8 @@ class Downloader:
 
         def progres_callback(value):
             progress.advance(value)
-            self.progress_callback(value / total)
+            if self.progress_callback is not None:
+                self.progress_callback(value / total)
 
         progres_callback(self.dest.size)  # already downloaded part is progress
 

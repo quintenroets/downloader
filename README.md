@@ -1,4 +1,8 @@
 # Downloader
+[![PyPI version](https://badge.fury.io/py/fire-downloader.svg)](https://badge.fury.io/py/fire-downloader)
+![Python version](https://img.shields.io/badge/python-3.10+-brightgreen)
+![Operating system](https://img.shields.io/badge/os-linux%20%7c%20macOS-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)
 
 Download urls in a script as if you would download them from your browser
 
@@ -16,14 +20,7 @@ Optional options:
 * Headers, session or cookies for download request
 * Whether to overwrite the download if the newly downloaded file has the same size
 
-## Installation
-
-```shell
-pip install git+https://github.com/quintenroets/downloader
-```
-
 ## Usage
-
 ### Cli
 
 ```shell
@@ -32,18 +29,23 @@ download url
 
 ### Python scripts
 
-```shell
+```python
 import downloader
 ```
 
 * Download single url:
 
-```shell
+```python
 downloader.download(url)
 ```
 
 * Download multiple urls:
 
-```shell
+```python
 downloader.download_urls(url)
+```
+
+## Installation
+```shell
+pip install fire-downloader
 ```
