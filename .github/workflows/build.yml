@@ -9,14 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check pre-commit hooks
-        uses: quintenroets/package-dev-tools/actions/validate/pre-commit@main
+        uses: quintenroets/actions/validate/pre-commit@main
 
   verify-packaging:
     name: Verify packaging
     runs-on: ubuntu-latest
     steps:
       - name: Verify packaging
-        uses: quintenroets/package-dev-tools/actions/validate/package@main
+        uses: quintenroets/actions/validate/package@main
 
   extract-python-versions:
     name: Extract Python versions
@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Extract Python versions
         id: extract-python-versions
-        uses: quintenroets/package-dev-tools/actions/setup/extract-python-versions@main
+        uses: quintenroets/actions/setup/extract-python-versions@main
 
   run-tests:
     name: Run tests
@@ -38,7 +38,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Run tests
-        uses: quintenroets/package-dev-tools/actions/validate/tests@main
+        uses: quintenroets/actions/validate/tests@main
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -53,7 +53,7 @@ jobs:
       contents: write  # Needed for GitHub publishing
     steps:
       - name: Publish
-        uses: quintenroets/package-dev-tools/actions/publish@main
+        uses: quintenroets/actions/publish@main
 
   trigger-template-sync:
     name: Trigger template sync
@@ -62,6 +62,6 @@ jobs:
     needs: [check-pre-commit, verify-packaging, run-tests]
     steps:
       - name: Trigger template sync
-        uses: quintenroets/package-dev-tools/actions/trigger-template-sync@main
+        uses: quintenroets/actions/trigger-template-sync@main
         with:
           token: ${{ secrets.TEMPLATE_SYNC_TRIGGER }}
