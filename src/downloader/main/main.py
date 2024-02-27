@@ -1,6 +1,6 @@
 import threading
 
-from plib import Path
+from superpathlib import Path
 
 from .downloader import Downloader
 
