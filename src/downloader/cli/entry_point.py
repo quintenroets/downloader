@@ -2,7 +2,7 @@ from typing import Annotated
 
 import typer
 from package_utils.cli import create_entry_point
-from plib import Path
+from superpathlib import Path
 
 import downloader
 

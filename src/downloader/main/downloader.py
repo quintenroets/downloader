@@ -7,8 +7,8 @@ from dataclasses import dataclass
 import dateutil.parser
 import requests
 import urllib3
-from plib import Path
 from retry import retry
+from superpathlib import Path
 from tqdm.utils import CallbackIOWrapper
 
 from .progress import UIProgress
@@ -29,7 +29,7 @@ class Downloader:
     skip_same_size: bool = False
     set_time: bool = True  # set modified time to modified time on server
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.dest = self.prepare_dest(self.dest, self.folder)
         self.session = self.prepare_session(self.session, self.headers)
 
@@ -62,7 +62,7 @@ class Downloader:
         (requests.exceptions.RequestException, urllib3.exceptions.HTTPError),
         tries=TRIES,
     )
-    def download(self):
+    def download(self) -> None:
         self.retry_amount += 1
         headers = {"Range": f"bytes={self.temp_dest.size}-"}
         if "If-Modified-Since" in self.session.headers:
@@ -73,7 +73,7 @@ class Downloader:
         if stream.status_code != 304:
             self.download_modified(stream)
 
-    def download_modified(self, stream):
+    def download_modified(self, stream) -> None:
         if stream.status_code == 416:  # range not satifiable or supported
             stream = self.session.get(self.url, timeout=self.timeout, stream=True)
         elif "Content-Range" in stream.headers:
@@ -92,7 +92,7 @@ class Downloader:
         if not skip:
             self.start_download(stream)
 
-    def start_download(self, stream):
+    def start_download(self, stream) -> None:
         total = (
             int(
                 stream.headers["Content-Length"]
@@ -104,7 +104,7 @@ class Downloader:
         progress = UIProgress(self.description, total=total + self.dest.size)
         # downloaded size added to todo and done
 
-        def progres_callback(value):
+        def progres_callback(value) -> None:
             progress.advance(value)
             if self.progress_callback is not None:
                 self.progress_callback(value / total)
