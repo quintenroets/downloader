@@ -48,6 +48,9 @@ pythonpath = [
 ]
 
 [tool.ruff]
+fix = true
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
@@ -55,9 +58,6 @@ select = [
     "I",  # isort
     "UP",  # pyupgrade
 ]
-
-[tool.ruff.lint]
-fix = true
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
