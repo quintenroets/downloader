@@ -42,4 +42,4 @@ ci:
     autofix_commit_msg: auto fixes from pre-commit hooks
     autoupdate_commit_msg: 'pre-commit auto updates'
     autoupdate_schedule: monthly
-    skip: [mypy, run-tests, check-coverage]
+    skip: [run-tests, check-coverage]
