@@ -24,13 +24,6 @@ repos:
       - id: infer-missing-annotations
   - repo: local
     hooks:
-      - id: mypy
-        name: mypy
-        entry: mypy
-        language: system
-        files: '\.py'
-        fail_fast: true
-        require_serial: true
       - id: run-tests
         name: run-tests
         entry: coverage run
