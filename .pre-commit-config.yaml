@@ -5,12 +5,12 @@ repos:
       - id: docformatter
         args: [--in-place, --make-summary-multi-line, --close-quotes-on-newline, --wrap-summaries, "88"]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.4.3
     hooks:
       - id: ruff
       - id: ruff-format
   - repo: https://github.com/psf/black
-    rev: 24.3.0
+    rev: 24.4.2
     hooks:
       - id: black
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -24,6 +24,13 @@ repos:
       - id: infer-missing-annotations
   - repo: local
     hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: system
+        files: '\.py'
+        fail_fast: true
+        require_serial: true
       - id: run-tests
         name: run-tests
         entry: coverage run
@@ -42,4 +49,4 @@ ci:
     autofix_commit_msg: auto fixes from pre-commit hooks
     autoupdate_commit_msg: 'pre-commit auto updates'
     autoupdate_schedule: monthly
-    skip: [run-tests, check-coverage]
+    skip: [mypy, run-tests, check-coverage]
