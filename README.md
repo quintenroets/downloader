@@ -2,7 +2,7 @@
 [![PyPI version](https://badge.fury.io/py/fire-downloader.svg)](https://badge.fury.io/py/fire-downloader)
 ![Python version](https://img.shields.io/badge/python-3.10+-brightgreen)
 ![Operating system](https://img.shields.io/badge/os-linux%20%7c%20macOS-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen)
 
 Download urls in a script as if you would download them from your browser
 
