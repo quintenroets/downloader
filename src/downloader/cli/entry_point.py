@@ -10,9 +10,10 @@ import downloader
 def download(
     url: Annotated[str, typer.Argument(help="The url to download")],
     dest: Annotated[
-        Path | None, typer.Option(help="The local file to save the download")
+        Path | None,
+        typer.Option(help="The local file to save the download"),
     ] = None,
-):
+) -> Path:
     """
     Download url to file with option to retry on errors and resume from partial
     downloads.

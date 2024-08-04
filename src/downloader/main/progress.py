@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+import typing
 from dataclasses import dataclass
+from typing import Any
 
-import rich.progress as progress
-from rich.console import OverflowMethod
-from rich.progress import JustifyMethod, Task
+from rich import progress
 from rich.text import Text
+
+if typing.TYPE_CHECKING:
+    from types import TracebackType
+
+    from rich.console import OverflowMethod
+    from rich.progress import JustifyMethod, Task
+    from typing_extensions import Self
 
 
 @dataclass
@@ -36,7 +43,9 @@ class SizedTextColumn(progress.ProgressColumn):
 
 progress_manager = progress.Progress(
     SizedTextColumn(
-        "[progress.description]{task.description}", width=40, overflow="ellipsis"
+        "[progress.description]{task.description}",
+        width=40,
+        overflow="ellipsis",
     ),
     progress.BarColumn(),
     progress.DownloadColumn(),
@@ -53,12 +62,17 @@ class UIProgress:
     def advance(self, value: float) -> None:
         progress_manager.advance(self.job, value)
 
-    def update(self, **kwargs) -> None:
+    def update(self, **kwargs: Any) -> None:
         progress_manager.update(self.job, **kwargs)
 
-    def __enter__(self) -> UIProgress:
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *_) -> None:
-        if all([t.finished for t in progress_manager.tasks]):
-            progress_manager.__exit__(*_)
+    def __exit__(
+        self,
+        exception_type: type[BaseException] | None,
+        exception_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        if all(t.finished for t in progress_manager.tasks):
+            progress_manager.__exit__(exception_type, exception_value, traceback)

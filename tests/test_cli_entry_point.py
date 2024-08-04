@@ -4,6 +4,7 @@ from superpathlib import Path
 
 
 def test_entry_point(download_url: str) -> None:
-    with Path.tempfile() as path:
-        with cli_args(download_url, "--dest", path):
-            cli.entry_point()
+    path = Path.tempfile()
+    args = cli_args(download_url, "--dest", path)
+    with path, args:
+        cli.entry_point()
