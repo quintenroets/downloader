@@ -1,6 +1,6 @@
 [project]
 name = "fire-downloader"
-version = "1.0.2"
+version = "1.0.3"
 description = "Package for downloading urls"
 authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
 license = {text = "MIT"}
@@ -19,6 +19,7 @@ dependencies = [
 dev = [
     "package-dev-tools >=0.5.11, <1",
     "package-dev-utils >=0.1.6, <1",
+    "types-tqdm >=4.66.0.20240417, <5",
 ]
 
 [project.urls]
@@ -51,12 +52,12 @@ pythonpath = [
 fix = true
 
 [tool.ruff.lint]
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "UP",  # pyupgrade
+select = ["ALL"]
+ignore = [
+    "ANN101",  # annotate self
+    "ANN102",  # annotate cls
+    "ANN401",  # annotated with Any
+    "D", # docstrings
 ]
 
 [tool.ruff.lint.isort]
@@ -64,6 +65,7 @@ known-first-party = ["src"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+"tests/*" = ["S101"]  # assert used
 
 [tool.setuptools.package-data]
 downloader = ["py.typed"]
