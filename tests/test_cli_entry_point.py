@@ -1,6 +1,7 @@
-from downloader import cli
 from package_dev_utils.tests.args import cli_args
 from superpathlib import Path
+
+from downloader import cli
 
 
 def test_entry_point(download_url: str) -> None:
