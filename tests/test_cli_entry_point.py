@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 from package_dev_utils.tests.args import cli_args
 from superpathlib import Path
+=======
+from package_dev_utils.tests.args import no_cli_args
+>>>>>>> template
 
 from downloader import cli
 
