@@ -1,5 +1,10 @@
 # Downloader
+<<<<<<< HEAD
 [![PyPI version](https://badge.fury.io/py/fire-downloader.svg)](https://badge.fury.io/py/fire-downloader)
+=======
+[![PyPI version](https://badge.fury.io/py/downloader.svg)](https://badge.fury.io/py/downloader)
+![PyPI downloads](https://img.shields.io/pypi/dm/downloader)
+>>>>>>> template
 ![Python version](https://img.shields.io/badge/python-3.10+-brightgreen)
 ![Operating system](https://img.shields.io/badge/os-linux%20%7c%20macOS-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-91%25-brightgreen)
