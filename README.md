@@ -8,12 +8,12 @@
 Download urls in a script as if you would download them from your browser
 
 Features:
-* Only downloads when the destination does not exist yet or when the server indicates that there is a newer version
-* Automatically retry after error
-* Continue from partial download after error
-* Show progressbar during download
-* Download multiple urls in parallel
-* Specify custom callback on progress update
+* Downloads multiple urls in parallel
+* Downloads in chunks
+* Automatically retries and continues from partial downloads after error
+* Saves downloads and skips re-downloading the same url unless the server indicates an update
+* Shows progressbar during download
+* Supports custom callback on progress updates
 
 Optional options:
 * Destination location
