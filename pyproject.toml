@@ -17,7 +17,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "package-dev-tools >=0.7.1, <1",
+    "package-dev-tools >=0.8.0, <1",
     "package-dev-utils >=0.1.6, <1",
     "types-python-dateutil >=2.9.0.20240316, <3",
     "types-requests >=2.32.0.20240622, <3",
@@ -59,6 +59,12 @@ select = ["ALL"]
 ignore = [
     "ANN401",   # annotated with Any
     "D",        # docstrings
+    "D1",       # missing docstrings
+    "D200",     # one-line docstring
+    "D203",     # conflicts with D211
+    "D205",     # blank line between summary and description
+    "D212",     # conflicts with D213
+    "D401",     # imperative first line
     "G004",     # logging f-string
 ]
 
