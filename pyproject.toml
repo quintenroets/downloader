@@ -5,7 +5,7 @@ description = "Package for downloading urls"
 authors = [{name = "Quinten Roets", email = "qdr2104@columbia.edu"}]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "package-utils >=0.8.3, <1",
     "python-dateutil >=2.8.2, <3",
