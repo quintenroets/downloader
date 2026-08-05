@@ -9,10 +9,10 @@ from rich.text import Text
 
 if typing.TYPE_CHECKING:
     from types import TracebackType
+    from typing import Self
 
     from rich.console import OverflowMethod
     from rich.progress import JustifyMethod, Task
-    from typing_extensions import Self
 
 
 @dataclass

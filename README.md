@@ -1,8 +1,7 @@
 # Downloader
-<<<<<<< HEAD
 [![PyPI version](https://badge.fury.io/py/fire-downloader.svg)](https://badge.fury.io/py/fire-downloader)
 ![PyPI downloads](https://img.shields.io/pypi/dm/fire-downloader)
-![Python version](https://img.shields.io/badge/python-3.10+-brightgreen)
+![Python version](https://img.shields.io/badge/python-3.11+-brightgreen)
 ![Operating system](https://img.shields.io/badge/os-linux%20%7c%20macOS-brightgreen)
 ![Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen)
 
@@ -21,13 +20,6 @@ Optional options:
 * Number of retries
 * Headers, session or cookies for download request
 * Whether to overwrite the download if the newly downloaded file has the same size
-=======
-[![PyPI version](https://badge.fury.io/py/downloader.svg)](https://badge.fury.io/py/downloader)
-![PyPI downloads](https://img.shields.io/pypi/dm/downloader)
-![Python version](https://img.shields.io/badge/python-3.11+-brightgreen)
-![Operating system](https://img.shields.io/badge/os-linux%20%7c%20macOS%20%7c%20windows-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
->>>>>>> template
 
 ## Usage
 ### Cli
