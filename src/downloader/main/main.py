@@ -16,7 +16,8 @@ def download(url: str, target: Path | None = None, **kwargs: Any) -> Path:
 
 
 def get(*urls: Any, **kwargs: Any) -> list[bytes]:
-    """Get the content of urls and cache it to a local file.
+    """
+    Get the content of urls and cache it to a local file.
 
     Useful to speed up the process when the same url is requested
     multiple times

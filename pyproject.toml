@@ -37,6 +37,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.coverage.run]
 command_line = "-m pytest tests"
+relative_files = true
 
 [tool.coverage.report]
 precision = 4
@@ -58,7 +59,7 @@ fix = true
 select = ["ALL"]
 ignore = [
     "ANN401",   # annotated with Any
-    "D",        # docstrings
+    "CPY001",   # missing copyright notice
     "D1",       # missing docstrings
     "D200",     # one-line docstring
     "D203",     # conflicts with D211
